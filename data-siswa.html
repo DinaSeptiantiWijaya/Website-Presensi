@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Siswa</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background-color: #f0f4f8;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(to right, #2196f3, #00bcd4);
+      color: white;
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 600;
+    }
+
+    header p {
+      margin-top: 0.5rem;
+      font-size: 1rem;
+    }
+
+    main {
+      padding: 2rem;
+      flex-grow: 1;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      border-radius: 1rem;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #2196f3;
+      color: white;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      color: #777;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Data Siswa</h1>
+    <p>Daftar lengkap siswa dan informasi mereka</p>
+  </header>
+
+  <main>
+    <table>
+      <thead>
+        <tr>
+          <th>NIS</th>
+          <th>Nama</th>
+          <th>Kelas</th>
+          <th>Jenis Kelamin</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>22001</td>
+          <td>Rafi Ahmad</td>
+          <td>10 IPA 1</td>
+          <td>Laki-laki</td>
+          <td><i class="fas fa-edit" style="color:#2196f3; cursor: pointer;"></i></td>
+        </tr>
+        <tr>
+          <td>22002</td>
+          <td>Siti Nurhaliza</td>
+          <td>10 IPA 2</td>
+          <td>Perempuan</td>
+          <td><i class="fas fa-edit" style="color:#2196f3; cursor: pointer;"></i></td>
+        </tr>
+        <!-- Tambah data siswa lainnya di sini -->
+      </tbody>
+    </table>
+  </main>
+
+  <footer>
+    © 2025 Sistem Presensi Sekolah. All rights reserved.
+  </footer>
+</body>
+</html>
