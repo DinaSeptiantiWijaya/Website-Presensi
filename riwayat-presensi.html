@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Riwayat Presensi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      padding: 2rem;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    }
+    h1 {
+      text-align: center;
+      color: #4facfe;
+      margin-bottom: 1.5rem;
+    }
+    .filters {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .filters input[type="date"], .filters select {
+      padding: 0.5rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      min-width: 150px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2rem;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 0.75rem;
+      text-align: center;
+    }
+    th {
+      background-color: #4facfe;
+      color: #fff;
+    }
+    .rekap {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .card {
+      flex: 1;
+      min-width: 150px;
+      background-color: #e8f0fe;
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    .card h2 {
+      color: #4facfe;
+      font-size: 2rem;
+    }
+    .card p {
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="exportArea">
+    <h1>Riwayat Presensi</h1>
+
+    <div class="filters">
+      <!-- Ganti input bulan dan tahun jadi input tanggal dengan tipe 'date' -->
+      <input type="date" id="filterDate" onchange="handleFilterChange()"/>
+
+      <!-- Pilihan export data -->
+      <select id="exportType" onchange="handleExport(this.value)">
+        <option value="">Export Data</option>
+        <option value="excel">📊 Excel</option>
+        <option value="pdf">📄 PDF</option>
+      </select>
+    </div>
+
+    <table id="presensiTable">
+      <thead>
+        <tr>
+          <th>Tanggal</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>2025-04-21</td><td>Hadir</td></tr>
+        <tr><td>2025-04-22</td><td>Sakit</td></tr>
+        <tr><td>2025-04-23</td><td>Hadir</td></tr>
+        <tr><td>2025-04-24</td><td>Izin</td></tr>
+        <tr><td>2025-04-25</td><td>Hadir</td></tr>
+      </tbody>
+    </table>
+
+    <div class="rekap">
+      <div class="card">
+        <h2>3</h2>
+        <p>Hadir</p>
+      </div>
+      <div class="card">
+        <h2>1</h2>
+        <p>Izin</p>
+      </div>
+      <div class="card">
+        <h2>1</h2>
+        <p>Sakit</p>
+      </div>
+      <div class="card">
+        <h2>0</h2>
+        <p>Alpa</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function handleExport(type) {
+      if (type === 'excel') exportToExcel();
+      else if (type === 'pdf') exportToPDF();
+    }
+
+    function handleFilterChange() {
+      const selectedDate = document.getElementById('filterDate').value;
+      console.log(`Tanggal yang dipilih: ${selectedDate}`);
+      // Logic to filter data based on selected date
+    }
+
+    function exportToExcel() {
+      const table = document.getElementById("presensiTable");
+      const workbook = XLSX.utils.table_to_book(table, { sheet: "Riwayat Presensi" });
+      XLSX.writeFile(workbook, "riwayat-presensi.xlsx");
+    }
+
+    function exportToPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      html2canvas(document.querySelector("#exportArea")).then(canvas => {
+        const imgData = canvas.toDataURL("image/png");
+        const imgProps = doc.getImageProperties(imgData);
+        const pdfWidth = doc.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+        doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        doc.save("riwayat-presensi.pdf");
+      });
+    }
+  </script>
+</body>
+</html>
