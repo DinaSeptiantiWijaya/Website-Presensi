@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Siswa</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background: linear-gradient(to right, #1e90ff, #00c6ff);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      .sidebar {
+        transition: transform 0.3s ease-in-out;
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      h2 {
+        color: #4facfe;
+        margin-bottom: 1.5rem;
+        text-align: center;
+        width: 100%;
+        max-width: 700px;
+        font-size: 1.5rem; /* Ditingkatkan ukuran font untuk heading */
+      }
+
+      table th,
+      table td {
+        padding: 1rem;
+        text-align: center;
+        border: 1px solid #ddd;
+      }
+
+      video {
+        width: 100%;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+      }
+
+      button {
+        padding: 0.8rem 2rem;
+        background-color: #4facfe;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .main-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100vh;
+      }
+
+      .capture-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 1rem;
+      }
+
+      .video-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        flex-grow: 1;
+        margin-bottom: 1rem;
+      }
+
+      #captureBtn {
+        align-self: center;
+        margin-top: 1rem; /* Memberikan jarak dari video */
+      }
+
+      /* Gedein font untuk heading utama Dashboard dan sub heading */
+      h1 {
+        font-size: 2.5rem; /* Ukuran font Dashboard Siswa */
+      }
+
+      .text-lg {
+        font-size: 1.25rem; /* Ukuran font untuk Face Recognition, Status Kehadiran, dll */
+      }
+    </style>
+  </head>
+  <body class="min-h-screen flex">
+    <!-- Sidebar -->
+    <div
+      id="sidebar"
+      class="sidebar fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50 p-4"
+    >
+      <h2 class="text-xl font-semibold mb-4">Menu</h2>
+      <ul>
+        <li><a href="#" class="block py-2">Pendaftaran Data</a></li>
+        <li><a href="#" class="block py-2">Riwayat Presensi</a></li>
+      </ul>
+    </div>
+
+    <div class="flex-1 p-6">
+      <!-- Header -->
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-white">Dashboard Siswa</h1>
+        <button id="menuButton" class="text-white focus:outline-none">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-8 w-8"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <!-- Face Recognition Box -->
+        <div class="bg-white p-6 rounded-xl shadow-md mb-6">
+          <h2 class="text-lg font-semibold mb-6">Face Recognition</h2>
+          <p>Arahkan wajahmu ke kamera untuk melakukan presensi.</p>
+          <div class="video-container">
+            <video id="video" autoplay class="rounded-md border h-85 w-full object-cover"></video>
+            <button id="captureBtn">Presensi Sekarang</button>
+          </div>
+        </div>
+
+        <!-- Status Kehadiran -->
+        <div class="bg-white p-6 rounded-xl shadow-md mb-6">
+          <h2 class="text-lg font-semibold mb-2">Status Kehadiran Hari Ini</h2>
+          <p class="text-green-600 font-semibold">✅ Kamu sudah absen hari ini</p>
+        </div>
+
+        <!-- Data Kehadiran Harian -->
+        <div class="bg-white p-6 rounded-xl shadow-md mb-6">
+          <h2 class="text-lg font-semibold mb-4">Data Kehadiran Harian</h2>
+          <table class="table-auto w-full">
+            <thead>
+              <tr class="bg-gray-200">
+                <th class="px-4 py-2">Tanggal</th>
+                <th class="px-4 py-2">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="border px-4 py-2">2025-04-24</td>
+                <td class="border px-4 py-2">Hadir</td>
+              </tr>
+              <tr>
+                <td class="border px-4 py-2">2025-04-23</td>
+                <td class="border px-4 py-2">Izin</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Rekap Kehadiran -->
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <h2 class="text-lg font-semibold mb-4">Rekap Kehadiran</h2>
+          <canvas id="rekapChart" height="100"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Sidebar toggle
+      const menuBtn = document.getElementById('menuButton');
+      const sidebar = document.getElementById('sidebar');
+
+      menuBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+      });
+
+      // Chart.js bar chart setup
+      const ctx = document.getElementById('rekapChart').getContext('2d');
+      const rekapChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Hadir', 'Izin', 'Sakit', 'Alpa'],
+          datasets: [
+            {
+              label: 'Jumlah Hari',
+              data: [20, 3, 2, 1],
+              backgroundColor: [
+                '#34d399', // Hijau Hadir
+                '#fbbf24', // Kuning Izin
+                '#60a5fa', // Biru Sakit
+                '#f87171', // Merah Alpa
+              ],
+              borderRadius: 6,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1,
+              },
+            },
+          },
+        },
+      });
+
+      // Kamera face recognition
+      const video = document.getElementById('video');
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+          video.srcObject = stream;
+        })
+        .catch(err => {
+          console.error('Gagal mengakses kamera:', err);
+        });
+    </script>
+  </body>
+</html>
