@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Presensi Wajah</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      visibility: hidden; /* Hidden by default */
+    }
+    .popup-content {
+      background-color: #fff;
+      padding: 2rem 3rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 500px;
+      width: 100%;
+    }
+    h2 {
+      font-size: 1.8rem;
+      color: #4facfe;
+      margin-bottom: 1rem;
+    }
+    p {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 1.5rem;
+    }
+    .status {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #28a745; /* Hijau untuk hadir */
+      margin-bottom: 1.5rem;
+    }
+    button {
+      padding: 0.8rem 2rem;
+      background-color: #4facfe;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #3a9bdc;
+    }
+  </style>
+</head>
+<body>
+  <!-- Pop-up Face Detected -->
+  <div id="faceDetectedPopup" class="popup-overlay">
+    <div class="popup-content">
+      <h2>Presensi Wajah Berhasil</h2>
+      <p>Selamat, wajah kamu berhasil terdeteksi!</p>
+
+      <div class="status" id="attendanceStatus">✅ Kamu sudah absen hari ini</div>
+
+      <button onclick="goToDetailsPage()">Lihat Data Kehadiran</button>
+      <button onclick="closePopup()">Tutup</button>
+    </div>
+  </div>
+
+  <script>
+    const popup = document.getElementById("faceDetectedPopup");
+    const attendanceStatus = document.getElementById("attendanceStatus");
+
+    // Menampilkan pop-up Face Detected
+    function showPopup() {
+      popup.style.visibility = "visible";
+    }
+
+    // Menutup pop-up Face Detected
+    function closePopup() {
+      popup.style.visibility = "hidden";
+    }
+
+    // Arahkan ke halaman data kehadiran
+    function goToDetailsPage() {
+      window.location.href = "data-kehadiran.html"; // Ganti dengan URL halaman yang sesuai
+    }
+
+    // Simulasi pop-up muncul (bisa di-trigger setelah face recognition sukses)
+    showPopup();
+  </script>
+</body>
+</html>

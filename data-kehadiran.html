@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Kehadiran</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container {
+      background-color: #fff;
+      padding: 2rem 3rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 100%;
+      max-width: 700px;
+    }
+    h2 {
+      color: #4facfe;
+      margin-bottom: 1.5rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2rem;
+    }
+    table th, table td {
+      padding: 1rem;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+    .chart-container {
+      width: 100%;
+      max-width: 600px;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Data Kehadiran Harian</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Tanggal</th>
+          <th>Status Kehadiran</th>
+        </tr>
+      </thead>
+      <tbody id="attendanceTableBody">
+        <!-- Isi tabel lewat JavaScript -->
+      </tbody>
+    </table>
+
+    <h3>Rekap Kehadiran</h3>
+    <div class="chart-container">
+      <canvas id="attendanceChart"></canvas>
+    </div>
+  </div>
+
+  <script>
+    // Data Kehadiran Harian (bisa disesuaikan dengan data asli dari server)
+    const attendanceData = [
+      { date: '2025-04-01', status: 'Hadir' },
+      { date: '2025-04-02', status: 'Tidak Hadir' },
+      { date: '2025-04-03', status: 'Hadir' },
+      { date: '2025-04-04', status: 'Hadir' },
+      { date: '2025-04-05', status: 'Sakit' }
+    ];
+
+    // Menampilkan data kehadiran harian di tabel
+    function populateAttendanceTable() {
+      const tableBody = document.getElementById('attendanceTableBody');
+      attendanceData.forEach((data) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${data.date}</td>
+          <td>${data.status}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    // Menghitung rekap kehadiran
+    function calculateAttendanceStats() {
+      const stats = { hadir: 0, izin: 0, sakit: 0, alpa: 0 };
+      attendanceData.forEach((data) => {
+        if (data.status === 'Hadir') stats.hadir++;
+        if (data.status === 'Izin') stats.izin++;
+        if (data.status === 'Sakit') stats.sakit++;
+        if (data.status === 'Tidak Hadir') stats.alpa++;
+      });
+      return stats;
+    }
+
+    // Menampilkan grafik rekap kehadiran
+    function renderAttendanceChart() {
+      const stats = calculateAttendanceStats();
+      const ctx = document.getElementById('attendanceChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Hadir', 'Izin', 'Sakit', 'Alpa'],
+          datasets: [{
+            label: 'Jumlah Kehadiran',
+            data: [stats.hadir, stats.izin, stats.sakit, stats.alpa],
+            backgroundColor: ['#28a745', '#ffc107', '#fd7e14', '#dc3545'],
+            borderColor: '#fff',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+
+    // Initialize page content
+    populateAttendanceTable();
+    renderAttendanceChart();
+  </script>
+
+</body>
+</html>
